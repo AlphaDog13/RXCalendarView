@@ -20,14 +20,14 @@ public protocol RXCalendarDataSource: NSObjectProtocol {
 
 open class RXCalendarContainerView: UIView {
     
-    weak open var dataSource: RXCalendarDataSource? {
+    @objc weak open var dataSource: RXCalendarDataSource? {
         didSet {
             guard let _ = calendarContainer.containerView else {
                 return calendarContainer.containerView = self
             }
         }
     }
-    weak open var delegate: RXCalendarDelegate? {
+    @objc weak open var delegate: RXCalendarDelegate? {
         didSet {
             guard let _ = calendarContainer.containerView else {
                 return calendarContainer.containerView = self
@@ -94,7 +94,6 @@ extension RXCalendarContainerView: RXCalendarCellDelegate, RXCalendarCellDataSou
             return arr
         }
         return []
-//        return ["2018-03-03", "2018-03-11", "2018-03-13", "2018-03-23"]
     }
     
 }
