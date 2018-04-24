@@ -10,10 +10,10 @@ import UIKit
 
 open class RXMonthObject: NSObject {
     
-    open var monthStr: String = "" //yyyy-MM
-    open var monthStartDateStr: String = ""
-    open var monthEndDateStr: String = ""
-    open var calendarSize: CGSize = CGSize.zero
+    @objc open var monthStr: String = "" //yyyy-MM
+    @objc open var monthStartDateStr: String = ""
+    @objc open var monthEndDateStr: String = ""
+    @objc open var calendarSize: CGSize = CGSize.zero
     
     convenience init(month: String, startDate: String, endDate: String, size: CGSize = CGSize.zero) {
         self.init()
