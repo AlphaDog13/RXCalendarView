@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "RXCalendarView"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
   s.summary      = "An Calendar"
 
   s.homepage     = "https://github.com/AlphaDog13/RXCalendarView"

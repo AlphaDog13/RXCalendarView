@@ -8,16 +8,6 @@
 
 import UIKit
 
-@objc(RXCalendarDelegate)
-public protocol RXCalendarDelegate: NSObjectProtocol {
-    func calendarAction(_ dayInfo: RXDateObject)
-}
-
-@objc(RXCalendarDataSource)
-public protocol RXCalendarDataSource: NSObjectProtocol {
-    func signDateInMonth(view: RXCalendarView) -> [String]
-}
-
 open class RXCalendarContainerView: UIView {
     
     @objc weak open var dataSource: RXCalendarDataSource? {
@@ -27,6 +17,7 @@ open class RXCalendarContainerView: UIView {
             }
         }
     }
+    
     @objc weak open var delegate: RXCalendarDelegate? {
         didSet {
             guard let _ = calendarContainer.containerView else {
@@ -65,6 +56,10 @@ open class RXCalendarContainerView: UIView {
     }
     
     ///MARK: - Layout
+//    open override var intrinsicContentSize: CGSize {
+//        return self.intrinsicContentSize
+//    }
+    
     open func layout() {
         ///weekView
         addConstraint(NSLayoutConstraint(item: weekView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0))
@@ -94,6 +89,10 @@ extension RXCalendarContainerView: RXCalendarCellDelegate, RXCalendarCellDataSou
             return arr
         }
         return []
+    }
+    
+    func scrollToNextMonth(monthInfo: RXMonthObject) {
+        delegate?.didScrollToNextMonth(monthInfo)
     }
     
 }
