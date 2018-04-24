@@ -81,37 +81,43 @@ open class RXCalendarScrollView: UIScrollView {
         calendarArr.append(leftCalendar)
         calendarArr.append(midCalendar)
         calendarArr.append(rightCalendar)
+        
         layout()
     }
     
     //MARK: - Layout
+    open override var intrinsicContentSize: CGSize {
+        var contentSize = superview?.intrinsicContentSize
+        contentSize = calendarArr[1].bounds.size
+        return contentSize!
+    }
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         if isFirstLoad {
             isFirstLoad = false
+            setNeedsLayout()
+            layoutIfNeeded()
             setContentOffset(CGPoint.init(x: calendarArr[1].frame.origin.x, y: 0), animated: false)
+            moveToMonth(calendarView: calendarArr[1])
         }
     }
     
     open func layout() {
         ///midCalendar
         addConstraint(NSLayoutConstraint(item: calendarArr[1], attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: calendarArr[1], attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: calendarArr[1], attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: calendarArr[1], attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1, constant: 0))
         
         ///leftCalendar
         addConstraint(NSLayoutConstraint(item: calendarArr[0], attribute: .right, relatedBy: .equal, toItem: calendarArr[1], attribute: .left, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: calendarArr[0], attribute: .centerY, relatedBy: .equal, toItem: calendarArr[1], attribute: .centerY, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: calendarArr[0], attribute: .top, relatedBy: .equal, toItem: calendarArr[1], attribute: .top, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: calendarArr[0], attribute: .width, relatedBy: .equal, toItem: calendarArr[1], attribute: .width, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: calendarArr[0], attribute: .height, relatedBy: .equal, toItem: calendarArr[1], attribute: .height, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: calendarArr[0], attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0))
         
         ///rightCalendar
         addConstraint(NSLayoutConstraint(item: calendarArr[2], attribute: .left, relatedBy: .equal, toItem: calendarArr[1], attribute: .right, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: calendarArr[2], attribute: .centerY, relatedBy: .equal, toItem: calendarArr[1], attribute: .centerY, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: calendarArr[2], attribute: .top, relatedBy: .equal, toItem: calendarArr[1], attribute: .top, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: calendarArr[2], attribute: .width, relatedBy: .equal, toItem: calendarArr[1], attribute: .width, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: calendarArr[2], attribute: .height, relatedBy: .equal, toItem: calendarArr[1], attribute: .height, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: calendarArr[2], attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1, constant: 0))
     }
     
@@ -150,6 +156,18 @@ extension RXCalendarScrollView: UIScrollViewDelegate {
         setNeedsLayout()
         layoutIfNeeded()
         setContentOffset(CGPoint.init(x: calendarArr[1].frame.origin.x, y: 0), animated: false)
+        moveToMonth(calendarView: calendarArr[1])
+    }
+    
+    fileprivate func moveToMonth(calendarView: RXCalendarView) {
+        let month = calendarView.dateStr
+        let calendar: Calendar = Calendar(identifier: .gregorian)
+        let dateFormatter_M: DateFormatter = DateFormatter.init()
+        dateFormatter_M.dateFormat = "yyyy-MM"
+        let thisMonthRange: Range = calendar.range(of: .day, in: .month, for: dateFormatter_M.date(from: month)!)!
+        let calendarSize: CGSize = CGSize.init(width: calendarView.bounds.size.width, height: calendarView.bounds.size.height + 40)
+        let monthObj: RXMonthObject = RXMonthObject(month: month, startDate: "\(month)-1", endDate: "\(month)-\(thisMonthRange.count)", size:calendarSize)
+        containerView?.scrollToNextMonth(monthInfo: monthObj)
     }
     
 }

@@ -46,6 +46,10 @@ class ViewController: UIViewController, RXCalendarDelegate, RXCalendarDataSource
     func signDateInMonth(view: RXCalendarView) -> [String] {
         return ["2018-03-03", "2018-03-11", "2018-03-13", "2018-03-23"]
     }
+    
+    func didScrollToNextMonth(_ monthInfo: RXMonthObject) {
+        print("\(monthInfo.monthStr) * \(monthInfo.monthStartDateStr) * \(monthInfo.monthEndDateStr) * \(monthInfo.calendarSize)")
+    }
 
 }
 

@@ -26,8 +26,6 @@ open class RXCalendarView: UICollectionView {
     }
     weak var cellDelegate: RXCalendarCellDelegate?
     
-    var dateStr: String = ""
-    
     open var itemArr = [RXDateObject]() {
         didSet {
             signDateArr = cellDataSource?.signDateInCurrentMonth(view: self)
@@ -36,6 +34,8 @@ open class RXCalendarView: UICollectionView {
     }
     
     open var signDateArr: [String]?
+    
+    var dateStr: String = ""
 
     //MARK: - Init
     public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
@@ -52,7 +52,20 @@ open class RXCalendarView: UICollectionView {
         dataSource = self
         register(RXCalendarDayCell.self, forCellWithReuseIdentifier: "RXCalendarDayCell")
         
-        backgroundColor = .white
+        backgroundColor = .blue
+    }
+    
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        if !self.bounds.size.equalTo(intrinsicContentSize) {
+            invalidateIntrinsicContentSize()
+        }
+    }
+    
+    open override var intrinsicContentSize: CGSize {
+        var contentSize = superview?.intrinsicContentSize
+        contentSize = self.contentSize
+        return contentSize!
     }
     
 }
@@ -74,7 +87,6 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
             }
         }
         cell.dataObject = item
-        
         
         return cell
     }

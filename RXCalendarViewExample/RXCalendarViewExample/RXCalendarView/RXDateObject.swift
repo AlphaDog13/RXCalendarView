@@ -10,16 +10,16 @@ import UIKit
 
 open class RXDateObject: NSObject {
     
-    open var dateDayStr: String = ""
-    open var dateStr: String = ""
+    open var dayStr: String = "" //日期
+    open var dateStr: String = "" //yyyy-MM-dd
     open var isToday: Bool = false
     open var isInCurrentMonth: Bool = true
     open var isSign: Bool = false
     
     convenience init(date: String, day: String, inCurrentMonth: Bool = true, today: Bool = false) {
         self.init()
-        dateDayStr = day
         dateStr = date
+        dayStr = day
         isToday = today
         isInCurrentMonth = inCurrentMonth
     }

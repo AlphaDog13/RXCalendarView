@@ -29,7 +29,7 @@ open class RXCalendarDayCell: UICollectionViewCell {
             } else {
                 titleLabel.textColor = .gray
             }
-            titleLabel.text = "\(dataObject.dateDayStr)"
+            titleLabel.text = "\(dataObject.dayStr)"
         }
     }
     
