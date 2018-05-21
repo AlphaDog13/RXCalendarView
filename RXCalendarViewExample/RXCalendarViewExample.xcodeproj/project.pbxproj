@@ -14,6 +14,7 @@
 		6B41F8A42060AE4600C98371 /* RXDateObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B41F8A32060AE4600C98371 /* RXDateObject.swift */; };
 		6B4AEDD2208ED49A00417400 /* RXMonthObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4AEDD1208ED49A00417400 /* RXMonthObject.swift */; };
 		6B4AEDD4208F034600417400 /* RXCalendarProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4AEDD3208F034600417400 /* RXCalendarProtocol.swift */; };
+		6B6EA06C20AC30120083C40A /* RXCalendarSingleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6EA06B20AC30120083C40A /* RXCalendarSingleton.swift */; };
 		6BC5D963205B679800801E62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC5D962205B679800801E62 /* AppDelegate.swift */; };
 		6BC5D965205B679800801E62 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC5D964205B679800801E62 /* ViewController.swift */; };
 		6BC5D968205B679800801E62 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BC5D966205B679800801E62 /* Main.storyboard */; };
@@ -31,6 +32,7 @@
 		6B41F8A32060AE4600C98371 /* RXDateObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RXDateObject.swift; sourceTree = "<group>"; };
 		6B4AEDD1208ED49A00417400 /* RXMonthObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RXMonthObject.swift; sourceTree = "<group>"; };
 		6B4AEDD3208F034600417400 /* RXCalendarProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RXCalendarProtocol.swift; sourceTree = "<group>"; };
+		6B6EA06B20AC30120083C40A /* RXCalendarSingleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RXCalendarSingleton.swift; sourceTree = "<group>"; };
 		6BC5D95F205B679800801E62 /* RXCalendarViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RXCalendarViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BC5D962205B679800801E62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BC5D964205B679800801E62 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				6B41F8A32060AE4600C98371 /* RXDateObject.swift */,
 				6B4AEDD1208ED49A00417400 /* RXMonthObject.swift */,
 				6B4AEDD3208F034600417400 /* RXCalendarProtocol.swift */,
+				6B6EA06B20AC30120083C40A /* RXCalendarSingleton.swift */,
 			);
 			path = RXCalendarView;
 			sourceTree = "<group>";
@@ -178,6 +181,7 @@
 				6B4AEDD2208ED49A00417400 /* RXMonthObject.swift in Sources */,
 				6BC5D965205B679800801E62 /* ViewController.swift in Sources */,
 				6B41F89A205F7D9B00C98371 /* RXCalendarDayCell.swift in Sources */,
+				6B6EA06C20AC30120083C40A /* RXCalendarSingleton.swift in Sources */,
 				6BC5D978205B807100801E62 /* RXCalendarWeekView.swift in Sources */,
 				6BC5D963205B679800801E62 /* AppDelegate.swift in Sources */,
 				6B41F898205F7A4D00C98371 /* RXCalendarView.swift in Sources */,

@@ -15,6 +15,7 @@ open class RXDateObject: NSObject {
     @objc open var isToday: Bool = false
     @objc open var isInCurrentMonth: Bool = true
     @objc open var isSign: Bool = false
+    @objc open var isSelected: Bool = false
     
     convenience init(date: String, day: String, inCurrentMonth: Bool = true, today: Bool = false) {
         self.init()

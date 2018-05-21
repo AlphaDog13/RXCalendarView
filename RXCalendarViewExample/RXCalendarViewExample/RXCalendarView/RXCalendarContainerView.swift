@@ -8,6 +8,12 @@
 
 import UIKit
 
+@objc(RXCalendarScrollDirection)
+public enum RXCalendarScrollDirection: Int {
+    case scrollHorizonal = 0
+    case scrollVertical
+}
+
 open class RXCalendarContainerView: UIView {
     
     @objc weak open var dataSource: RXCalendarDataSource? {
@@ -17,7 +23,7 @@ open class RXCalendarContainerView: UIView {
             }
         }
     }
-    
+
     @objc weak open var delegate: RXCalendarDelegate? {
         didSet {
             guard let _ = calendarContainer.containerView else {
@@ -26,6 +32,9 @@ open class RXCalendarContainerView: UIView {
         }
     }
     
+    @objc var scrollDirection: RXCalendarScrollDirection = RXCalendarScrollDirection.scrollHorizonal
+    
+    //MARK: - Control
     lazy var weekView: RXCalendarWeekView = {
         let view = RXCalendarWeekView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -33,16 +42,21 @@ open class RXCalendarContainerView: UIView {
     }()
     
     lazy var calendarContainer: RXCalendarScrollView = {
-        let view = RXCalendarScrollView()
+        let view = RXCalendarScrollView(frame: CGRect.zero, scrollDirection: scrollDirection)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
     }()
 
     ///MARK: - Init
+    @objc public convenience init(frame: CGRect, scrollDirection: RXCalendarScrollDirection) {
+        self.init(frame: frame)
+        self.scrollDirection = scrollDirection
+        setup()
+    }
+    
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -50,16 +64,16 @@ open class RXCalendarContainerView: UIView {
     }
     
     open func setup() {
+        let dateFormatter_D: DateFormatter = DateFormatter.init()
+        dateFormatter_D.dateFormat = "yyyy-MM-dd"
+        RXCalendarSingleton.shared.selectedDateStr =  dateFormatter_D.string(from: Date())
+        
         addSubview(weekView)
         addSubview(calendarContainer)
         layout()
     }
     
     ///MARK: - Layout
-//    open override var intrinsicContentSize: CGSize {
-//        return self.intrinsicContentSize
-//    }
-    
     open func layout() {
         ///weekView
         addConstraint(NSLayoutConstraint(item: weekView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1, constant: 0))
@@ -76,19 +90,48 @@ open class RXCalendarContainerView: UIView {
     
     ///MARK: - Action
     
+    
+    //MARK: - Public Action
+    @objc open func reloadCalendar() {
+        calendarContainer.midCalendar.reload()
+    }
+    
 }
 
 extension RXCalendarContainerView: RXCalendarCellDelegate, RXCalendarCellDataSource {
     
-    func calendarCellAction(cellInfo: RXDateObject) {
-        delegate?.calendarAction(cellInfo)
-    }
-    
+    //MARK: - RXCalendarCellDataSource
     func signDateInCurrentMonth(view: RXCalendarView) -> [String] {
         if let arr = dataSource?.signDateInMonth(view: view) {
             return arr
         }
         return []
+    }
+    
+    func selectColor(view: RXCalendarView) -> UIColor {
+        if let color = dataSource?.rxCalendarSelectColor() {
+            return color
+        }
+        return .orange
+    }
+    
+    func signColor(view: RXCalendarView) -> UIColor {
+        if let color = dataSource?.rxCalendarSignColor() {
+            return color
+        }
+        return .red
+    }
+    
+    func dayNotInMonthColor(view: RXCalendarView) -> UIColor {
+        if let color = dataSource?.rxCalendarNotInMonthColor() {
+            return color
+        }
+        return .gray
+    }
+    
+    //MARK: - RXCalendarCellDelegate
+    func calendarCellAction(cellInfo: RXDateObject) {
+        delegate?.calendarAction(cellInfo)
     }
     
     func scrollToNextMonth(monthInfo: RXMonthObject) {

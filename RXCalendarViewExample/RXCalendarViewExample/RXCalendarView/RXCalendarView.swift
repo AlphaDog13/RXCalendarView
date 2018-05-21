@@ -14,26 +14,35 @@ protocol RXCalendarCellDelegate: NSObjectProtocol {
 
 protocol RXCalendarCellDataSource: NSObjectProtocol {
     func signDateInCurrentMonth(view: RXCalendarView) -> [String]
+    func selectColor(view: RXCalendarView) -> UIColor
+    func signColor(view: RXCalendarView) -> UIColor
+    func dayNotInMonthColor(view: RXCalendarView) -> UIColor
 }
 
 open class RXCalendarView: UICollectionView {
     
+    weak var cellDelegate: RXCalendarCellDelegate?
     weak var cellDataSource: RXCalendarCellDataSource? {
         didSet {
-            signDateArr = cellDataSource?.signDateInCurrentMonth(view: self)
+            resetData()
             reloadData()
         }
     }
-    weak var cellDelegate: RXCalendarCellDelegate?
     
     open var itemArr = [RXDateObject]() {
         didSet {
-            signDateArr = cellDataSource?.signDateInCurrentMonth(view: self)
+            resetData()
             reloadData()
         }
     }
     
     open var signDateArr: [String]?
+    open var selectColor: UIColor?
+    open var signColor: UIColor?
+    open var dayNotInMonthColor: UIColor?
+    
+    open var cellWidth: CGFloat?
+    open var cellHeight: CGFloat?
     
     var dateStr: String = ""
 
@@ -50,9 +59,9 @@ open class RXCalendarView: UICollectionView {
     open func setup() {
         delegate = self
         dataSource = self
+        isScrollEnabled = false
+        backgroundColor = .white
         register(RXCalendarDayCell.self, forCellWithReuseIdentifier: "RXCalendarDayCell")
-        
-        backgroundColor = .blue
     }
     
     override open func layoutSubviews() {
@@ -68,6 +77,20 @@ open class RXCalendarView: UICollectionView {
         return contentSize!
     }
     
+    //MARK: - Action
+    private func resetData() {
+        signDateArr = cellDataSource?.signDateInCurrentMonth(view: self)
+        selectColor = cellDataSource?.selectColor(view: self)
+        signColor = cellDataSource?.signColor(view: self)
+        dayNotInMonthColor = cellDataSource?.dayNotInMonthColor(view: self)
+    }
+    
+    //MARK: - Public Action
+    @objc open func reload() {
+        resetData()
+        reloadData()
+    }
+    
 }
 
 extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -80,12 +103,24 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: RXCalendarDayCell = dequeueReusableCell(withReuseIdentifier: "RXCalendarDayCell", for: indexPath) as! RXCalendarDayCell
         let item: RXDateObject = itemArr[indexPath.row]
+        let cellDate = item.dateStr
+        
+        cell.selectColor = selectColor
+        cell.signColor = signColor
+        cell.notInMonthColor = dayNotInMonthColor
+        
+        item.isSign = false
         if let arr = signDateArr, arr.count > 0 {
-            let cellDate = item.dateStr
             if arr.contains(cellDate) {
                 item.isSign = true
             }
         }
+        
+        item.isSelected = false
+        if cellDate == RXCalendarSingleton.shared.selectedDateStr {
+            item.isSelected = true
+        }
+        
         cell.dataObject = item
         
         return cell
@@ -93,13 +128,17 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     //MARK: - UICollectionViewDelegateFlowLayout
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = self.bounds.size.width/CGFloat(7)
-        return CGSize(width: width, height: width)
+        cellWidth = self.bounds.size.width/7
+        cellHeight = cellWidth! / 4 * 3
+        return CGSize(width: cellWidth!, height: cellHeight!)
     }
     
     //MARK: - UICollectionViewDelegate
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item: RXDateObject = itemArr[indexPath.row]
+        RXCalendarSingleton.shared.selectedDateStr = item.dateStr
+        
+        NotificationCenter.default.post(name: NotificationHelper.calendarCellSelect, object: nil)
         cellDelegate?.calendarCellAction(cellInfo: item)
     }
     

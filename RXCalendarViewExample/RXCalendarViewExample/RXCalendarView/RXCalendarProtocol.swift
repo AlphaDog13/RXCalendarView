@@ -7,6 +7,15 @@
 //
 
 import Foundation
+import UIKit
+
+@objc(RXCalendarDataSource)
+public protocol RXCalendarDataSource {
+    func signDateInMonth(view: RXCalendarView) -> [String]
+    func rxCalendarSelectColor() -> UIColor
+    func rxCalendarSignColor() -> UIColor
+    func rxCalendarNotInMonthColor() -> UIColor
+}
 
 @objc(RXCalendarDelegate)
 public protocol RXCalendarDelegate {
@@ -14,20 +23,11 @@ public protocol RXCalendarDelegate {
     func didScrollToNextMonth(_ monthInfo: RXMonthObject)
 }
 
-@objc(RXCalendarDataSource)
-public protocol RXCalendarDataSource {
-    func signDateInMonth(view: RXCalendarView) -> [String]
-}
-
 extension RXCalendarDelegate {
     
     func calendarAction(_ dayInfo: RXDateObject) {
         
     }
-    
-//    func didScrollToNextMonth(_ monthInfo: RXMonthObject) {
-//        
-//    }
     
 }
 
