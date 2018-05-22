@@ -8,8 +8,6 @@
 
 import UIKit
 
-//#define CalendarHeight SCREEN_WIDTH/7*6+40
-
 class ViewController: UIViewController, RXCalendarDelegate, RXCalendarDataSource {
     
     var calendarHeight: CGFloat = UIScreen.main.bounds.width/7*6+40
@@ -17,7 +15,7 @@ class ViewController: UIViewController, RXCalendarDelegate, RXCalendarDataSource
     var calendarHeightConstraint: NSLayoutConstraint?
     
     lazy var calendarView: RXCalendarContainerView = {
-        let view: RXCalendarContainerView = RXCalendarContainerView(frame: CGRect.zero, scrollDirection: RXCalendarScrollDirection.scrollVertical)
+        let view: RXCalendarContainerView = RXCalendarContainerView(frame: CGRect.zero, scrollDirection: RXCalendarScrollDirection.scrollHorizonal)
         view.dataSource = self
         view.delegate = self
         view.translatesAutoresizingMaskIntoConstraints = false

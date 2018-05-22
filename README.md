@@ -50,17 +50,17 @@ override func viewDidLoad() {
 ### DataSource
 
 ```swift
-func signDateInMonth(view: RXCalendarView) -> [String] //需标记的日期 [yyyy-MM-dd]
-func rxCalendarSelectColor() -> UIColor //选中颜色
-func rxCalendarSignColor() -> UIColor //标记颜色
-func rxCalendarNotInMonthColor() -> UIColor //非当月颜色
+func signDateInMonth(view: RXCalendarView) -> [String]  //需标记的日期 [yyyy-MM-dd]
+func rxCalendarSelectColor() -> UIColor                 //选中颜色
+func rxCalendarSignColor() -> UIColor                   //标记颜色
+func rxCalendarNotInMonthColor() -> UIColor             //非当月颜色
 ```
 
 ### Delegate
 
 ```swift
-func calendarAction(_ dayInfo: RXDateObject) //选中日期信息
-func didScrollToNextMonth(_ monthInfo: RXMonthObject) //当前月份信息
+func calendarAction(_ dayInfo: RXDateObject)            //选中日期信息
+func didScrollToNextMonth(_ monthInfo: RXMonthObject)   //当前月份信息
 ```
 
 ### 相关类
