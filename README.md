@@ -2,10 +2,16 @@
 
 ## 内容
 
+- [样例](#样例)
 - [需要](#需要)
 - [使用](#使用)
 - [开始](#开始)
 - [License](#license)
+
+## 样例
+
+![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_b83B9q.GIF) 
+![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_7fMynP.GIF) 
 
 ## 需要
 
