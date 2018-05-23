@@ -19,7 +19,7 @@ class RXCalendarSingleton: NSObject {
     
     static let shared = RXCalendarSingleton()
     
-    private override init() {}
+    private override init() {} 
     
     override func copy() -> Any {
         return self
