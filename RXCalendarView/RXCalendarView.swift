@@ -40,6 +40,7 @@ open class RXCalendarView: UICollectionView {
     open var selectColor: UIColor?
     open var signColor: UIColor?
     open var dayNotInMonthColor: UIColor?
+    open var cellDateFont: UIFont?
     
     open var cellWidth: CGFloat?
     open var cellHeight: CGFloat?
@@ -80,9 +81,15 @@ open class RXCalendarView: UICollectionView {
     //MARK: - Action
     private func resetData() {
         signDateArr = cellDataSource?.signDateInCurrentMonth(view: self)
-        selectColor = cellDataSource?.selectColor(view: self)
-        signColor = cellDataSource?.signColor(view: self)
-        dayNotInMonthColor = cellDataSource?.dayNotInMonthColor(view: self)
+        if nil == selectColor {
+            selectColor = cellDataSource?.selectColor(view: self)
+        }
+        if nil == signColor {
+            signColor = cellDataSource?.signColor(view: self)
+        }
+        if nil == dayNotInMonthColor {
+            dayNotInMonthColor = cellDataSource?.dayNotInMonthColor(view: self)
+        }
     }
     
     //MARK: - Public Action
@@ -108,6 +115,7 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
         cell.selectColor = selectColor
         cell.signColor = signColor
         cell.notInMonthColor = dayNotInMonthColor
+        cell.dateFont = cellDateFont
         
         item.isSign = false
         if let arr = signDateArr, arr.count > 0 {
@@ -128,8 +136,12 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     //MARK: - UICollectionViewDelegateFlowLayout
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        cellWidth = self.bounds.size.width/7
-        cellHeight = cellWidth! / 4 * 3
+        cellWidth = floor(self.bounds.size.width/7)
+        if 18 < cellWidth! / 4 * 3 {
+            cellHeight = floor(cellWidth! / 4 * 3)
+        } else {
+            cellHeight = 18
+        }
         return CGSize(width: cellWidth!, height: cellHeight!)
     }
     

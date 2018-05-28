@@ -44,13 +44,13 @@ open class RXCalendarContainerView: UIView {
     lazy var calendarContainer: RXCalendarScrollView = {
         let view = RXCalendarScrollView(frame: CGRect.zero, scrollDirection: scrollDirection)
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
 
     ///MARK: - Init
-    @objc public convenience init(frame: CGRect, scrollDirection: RXCalendarScrollDirection) {
+    @objc public convenience init(frame: CGRect, month: String = currentMonth(), scrollDirection: RXCalendarScrollDirection) {
         self.init(frame: frame)
+        RXCalendarSingleton.shared.initMonth = month
         self.scrollDirection = scrollDirection
         setup()
     }
@@ -88,10 +88,16 @@ open class RXCalendarContainerView: UIView {
         addConstraint(NSLayoutConstraint(item: calendarContainer, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
     }
     
-    ///MARK: - Action
+    ///MARK: - Func
     
     
-    //MARK: - Public Action
+    //MARK: - Action
+    static public func currentMonth() -> String {
+        let dateFormatter: DateFormatter = DateFormatter.init()
+        dateFormatter.dateFormat = "yyyy-MM"
+        return dateFormatter.string(from: Date())
+    }
+    
     @objc open func reloadCalendar() {
         calendarContainer.midCalendar.reload()
     }

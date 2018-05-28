@@ -78,7 +78,6 @@ extension Date {
                 dayArr.append(RXDateObject(date: standardDate(nextMonth + "-\(i)"), day: "\(i)", inCurrentMonth: false))
             }
         }
-        
         return dayArr
     }
     

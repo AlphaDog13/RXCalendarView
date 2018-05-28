@@ -26,7 +26,14 @@ open class RXCalendarScrollView: UIScrollView {
     var calendarArr = [RXCalendarView]()
     var scrollDirection: RXCalendarScrollDirection = RXCalendarScrollDirection.scrollHorizonal
     
-    var monthStr: Date = Date()
+    var monthDate: Date {
+        get {
+            let month = RXCalendarSingleton.shared.initMonth!
+            let dateFormatter: DateFormatter = DateFormatter.init()
+            dateFormatter.dateFormat = "yyyy-MM"
+            return dateFormatter.date(from: month)!
+        }
+    }
     var isFirstLoad: Bool = true
     var todayColor: UIColor?
     var signColor: UIColor?
@@ -85,12 +92,12 @@ open class RXCalendarScrollView: UIScrollView {
         
         NotificationCenter.default.addObserver(self, selector: #selector(reloadCalenderData) , name: NotificationHelper.calendarCellSelect, object: nil)
         
-        leftCalendar.dateStr = Date.monthDate(date: monthStr, intervalOfMonth: -1)
-        midCalendar.dateStr = Date.monthDate(date: monthStr)
-        rightCalendar.dateStr = Date.monthDate(date: monthStr, intervalOfMonth: 1)
-        leftCalendar.itemArr = Date.monthDays(date: monthStr, intervalOfMonth: -1)
-        midCalendar.itemArr = Date.monthDays(date: monthStr)
-        rightCalendar.itemArr = Date.monthDays(date: monthStr, intervalOfMonth: 1)
+        leftCalendar.dateStr = Date.monthDate(date: monthDate, intervalOfMonth: -1)
+        midCalendar.dateStr = Date.monthDate(date: monthDate)
+        rightCalendar.dateStr = Date.monthDate(date: monthDate, intervalOfMonth: 1)
+        leftCalendar.itemArr = Date.monthDays(date: monthDate, intervalOfMonth: -1)
+        midCalendar.itemArr = Date.monthDays(date: monthDate)
+        rightCalendar.itemArr = Date.monthDays(date: monthDate, intervalOfMonth: 1)
         
         addSubview(leftCalendar)
         addSubview(midCalendar)

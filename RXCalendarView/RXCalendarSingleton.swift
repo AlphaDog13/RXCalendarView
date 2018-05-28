@@ -14,6 +14,7 @@ struct NotificationHelper {
 
 class RXCalendarSingleton: NSObject {
     
+    var initMonth: String?
     var selectedDateStr: String?
     var selectCell: RXCalendarDayCell?
     

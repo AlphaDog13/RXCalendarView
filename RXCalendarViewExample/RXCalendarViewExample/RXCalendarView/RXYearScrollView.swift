@@ -1,72 +1,60 @@
 //
-//  RXCalendarScrollView.swift
+//  RXYearScrollView.swift
 //  RXCalendarViewExample
 //
-//  Created by AlphaDog on 2018/3/19.
+//  Created by AlphaDog on 2018/5/23.
 //  Copyright © 2018年 AlphaDog. All rights reserved.
 //
 
 import UIKit
 
-open class RXCalendarScrollView: UIScrollView {
+@objc(RXYearScrollViewDelegate)
+public protocol RXYearScrollViewDelegate {
+    func yearScrollViewSelect(didSelectMonth monthStr: String)
+}
+
+public class RXYearScrollView: UIScrollView {
     
     //MARK: - Property
-    weak var containerView: RXCalendarContainerView? {
-        didSet {
-            leftCalendar.cellDelegate = containerView
-            midCalendar.cellDelegate = containerView
-            rightCalendar.cellDelegate = containerView
-            
-            leftCalendar.cellDataSource = containerView
-            midCalendar.cellDataSource = containerView
-            rightCalendar.cellDataSource = containerView
-        }
-    }
-    
-    var calendarArr = [RXCalendarView]()
-    var scrollDirection: RXCalendarScrollDirection = RXCalendarScrollDirection.scrollHorizonal
-    
-    var monthDate: Date {
-        get {
-            let month = RXCalendarSingleton.shared.initMonth!
-            let dateFormatter: DateFormatter = DateFormatter.init()
-            dateFormatter.dateFormat = "yyyy-MM"
-            return dateFormatter.date(from: month)!
-        }
-    }
+    @objc public weak var yearScrollViewDelegate: RXYearScrollViewDelegate?
     var isFirstLoad: Bool = true
-    var todayColor: UIColor?
-    var signColor: UIColor?
-    
+    var currentYear: String!
+    var scrollDirection: RXCalendarScrollDirection = RXCalendarScrollDirection.scrollHorizonal
+    var calendarArr = [RXYearCalendarView]()
+
     //MARK: - Control
-    var leftCalendar: RXCalendarView = {
-        let calendar = RXCalendarView(frame: .zero, collectionViewLayout: cellLayout())
+    lazy var leftCalendar: RXYearCalendarView = {
+        let calendar = RXYearCalendarView(frame: .zero, collectionViewLayout: RXYearScrollView.cellLayout())
         calendar.translatesAutoresizingMaskIntoConstraints = false
+        calendar.yearCalendarDelegate = self
         return calendar
     }()
     
-    var midCalendar: RXCalendarView = {
-        let calendar = RXCalendarView(frame: .zero, collectionViewLayout: cellLayout())
+    lazy var midCalendar: RXYearCalendarView = {
+        let calendar = RXYearCalendarView(frame: .zero, collectionViewLayout: RXYearScrollView.cellLayout())
         calendar.translatesAutoresizingMaskIntoConstraints = false
+        calendar.yearCalendarDelegate = self
+        return calendar
+    }()
+    
+    lazy var rightCalendar: RXYearCalendarView = {
+        let calendar = RXYearCalendarView(frame: .zero, collectionViewLayout: RXYearScrollView.cellLayout())
+        calendar.translatesAutoresizingMaskIntoConstraints = false
+        calendar.yearCalendarDelegate = self
         return calendar
     }()
 
-    var rightCalendar: RXCalendarView = {
-        let calendar = RXCalendarView(frame: .zero, collectionViewLayout: cellLayout())
-        calendar.translatesAutoresizingMaskIntoConstraints = false
-        return calendar
-    }()
-    
     static func cellLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 8
+        layout.minimumLineSpacing = 8
         return layout
     }
     
     //MARK: - Init
-    public convenience init(frame: CGRect, scrollDirection: RXCalendarScrollDirection) {
+    @objc public convenience init(frame: CGRect, year: String = currentYear(), scrollDirection: RXCalendarScrollDirection) {
         self.init(frame: frame)
+        self.currentYear = year
         self.scrollDirection = scrollDirection
         setup()
     }
@@ -79,9 +67,9 @@ open class RXCalendarScrollView: UIScrollView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+//    deinit {
+//        NotificationCenter.default.removeObserver(self)
+//    }
     
     open func setup() {
         delegate = self
@@ -90,14 +78,10 @@ open class RXCalendarScrollView: UIScrollView {
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
         
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadCalenderData) , name: NotificationHelper.calendarCellSelect, object: nil)
-        
-        leftCalendar.dateStr = Date.monthDate(date: monthDate, intervalOfMonth: -1)
-        midCalendar.dateStr = Date.monthDate(date: monthDate)
-        rightCalendar.dateStr = Date.monthDate(date: monthDate, intervalOfMonth: 1)
-        leftCalendar.itemArr = Date.monthDays(date: monthDate, intervalOfMonth: -1)
-        midCalendar.itemArr = Date.monthDays(date: monthDate)
-        rightCalendar.itemArr = Date.monthDays(date: monthDate, intervalOfMonth: 1)
+        let yearInt: NSInteger = NSInteger(currentYear)!
+        leftCalendar.yearStr = "\(yearInt - 1)"
+        midCalendar.yearStr = "\(yearInt)"
+        rightCalendar.yearStr = "\(yearInt + 1)"
         
         addSubview(leftCalendar)
         addSubview(midCalendar)
@@ -123,7 +107,7 @@ open class RXCalendarScrollView: UIScrollView {
             setNeedsLayout()
             layoutIfNeeded()
             resetCenter()
-            moveToMonth(calendarView: calendarArr[1])
+            moveToYear(calendarView: calendarArr[1])
         }
     }
     
@@ -171,7 +155,16 @@ open class RXCalendarScrollView: UIScrollView {
         }
     }
     
-    //Public Action
+    //MARK: - Func
+    
+    
+    //MARK: - Action
+    static public func currentYear() -> String {
+        let dateFormatter: DateFormatter = DateFormatter.init()
+        dateFormatter.dateFormat = "yyyy"
+        return dateFormatter.string(from: Date())
+    }
+    
     @objc func reloadCalenderData() {
         for calendar in calendarArr {
             calendar.reloadData()
@@ -179,7 +172,7 @@ open class RXCalendarScrollView: UIScrollView {
     }
 }
 
-extension RXCalendarScrollView: UIScrollViewDelegate {
+extension RXYearScrollView: UIScrollViewDelegate {
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if RXCalendarScrollDirection.scrollHorizonal == scrollDirection {
@@ -201,11 +194,8 @@ extension RXCalendarScrollView: UIScrollViewDelegate {
     
     private func removePreCalendar() {
         let calendar = calendarArr.first!
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM"
-        let date = dateFormatter.date(from: calendarArr[2].dateStr)
-        calendar.dateStr = Date.monthDate(date: date!, intervalOfMonth: 1)
-        calendar.itemArr = Date.monthDays(date: date!, intervalOfMonth: 1)
+        let date = Int(calendarArr[2].yearStr)
+        calendar.yearStr = "\(date! + 1)"
         
         calendarArr.append(calendar)
         calendarArr.remove(at: 0)
@@ -213,11 +203,8 @@ extension RXCalendarScrollView: UIScrollViewDelegate {
     
     private func removeLastCalendar() {
         let calendar = calendarArr.last!
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM"
-        let date = dateFormatter.date(from: calendarArr[0].dateStr)
-        calendar.dateStr = Date.monthDate(date: date!, intervalOfMonth: -1)
-        calendar.itemArr = Date.monthDays(date: date!, intervalOfMonth: -1)
+        let date = Int(calendarArr[0].yearStr)
+        calendar.yearStr = "\(date! - 1)"
         
         calendarArr.insert(calendar, at: 0)
         calendarArr.remove(at: calendarArr.count - 1)
@@ -229,18 +216,19 @@ extension RXCalendarScrollView: UIScrollViewDelegate {
         setNeedsLayout()
         layoutIfNeeded()
         resetCenter()
-        moveToMonth(calendarView: calendarArr[1])
+        moveToYear(calendarView: calendarArr[1])
     }
     
-    fileprivate func moveToMonth(calendarView: RXCalendarView) {
-        let month = calendarView.dateStr
-        let calendar: Calendar = Calendar(identifier: .gregorian)
-        let dateFormatter_M: DateFormatter = DateFormatter.init()
-        dateFormatter_M.dateFormat = "yyyy-MM"
-        let thisMonthRange: Range = calendar.range(of: .day, in: .month, for: dateFormatter_M.date(from: month)!)!
-        let calendarSize: CGSize = CGSize.init(width: calendarView.bounds.size.width, height: calendarView.bounds.size.height + 40)
-        let monthObj: RXMonthObject = RXMonthObject(month: month, startDate: "\(month)-01", endDate: "\(month)-\(thisMonthRange.count)", size:calendarSize)
-        containerView?.scrollToNextMonth(monthInfo: monthObj)
+    fileprivate func moveToYear(calendarView: RXYearCalendarView) {
+        
     }
     
+}
+
+extension RXYearScrollView: RXYearCalendarViewDelegate {
+
+    func yearCalendarAction(_ monthStr: String) {
+        yearScrollViewDelegate?.yearScrollViewSelect(didSelectMonth: monthStr)
+    }
+
 }

@@ -15,6 +15,11 @@ open class RXCalendarDayCell: UICollectionViewCell {
     var selectColor: UIColor?
     var signColor: UIColor?
     var notInMonthColor: UIColor?
+    var dateFont: UIFont? {
+        didSet {
+            titleLabel.font = dateFont
+        }
+    }
     
     var dataObject: RXDateObject = RXDateObject() {
         didSet {
@@ -45,7 +50,7 @@ open class RXCalendarDayCell: UICollectionViewCell {
         let imgView = UIImageView()
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.backgroundColor = .red
-        imgView.layer.cornerRadius = 3
+        imgView.layer.cornerRadius = 2
         imgView.clipsToBounds = true
         imgView.isHidden = true
         return imgView
@@ -76,10 +81,10 @@ open class RXCalendarDayCell: UICollectionViewCell {
         addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: -4))
         
         //bottomPointImgView
-        bottomPointImgView.addConstraint(NSLayoutConstraint(item: bottomPointImgView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6))
-        bottomPointImgView.addConstraint(NSLayoutConstraint(item: bottomPointImgView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 6))
+        bottomPointImgView.addConstraint(NSLayoutConstraint(item: bottomPointImgView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 4))
+        bottomPointImgView.addConstraint(NSLayoutConstraint(item: bottomPointImgView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 4))
         addConstraint(NSLayoutConstraint(item: bottomPointImgView, attribute: .centerX, relatedBy: .equal, toItem: titleLabel, attribute: .centerX, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: bottomPointImgView, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1, constant: 3))
+        addConstraint(NSLayoutConstraint(item: bottomPointImgView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: -3))
     }
     
     //MARK: - Action
@@ -113,5 +118,9 @@ open class RXCalendarDayCell: UICollectionViewCell {
         titleLabel.textColor = notInMonthColor
         titleLabel.backgroundColor = .clear
     }
+    
+//    private func pointSize() {
+//        return self.bounds.size.height / 2
+//    }
 
 }
