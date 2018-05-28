@@ -22,6 +22,7 @@ class RXYearCalendarView: UICollectionView {
         }
     }
     open var monthStrArr = [String]()
+    open var cellMonthTitleArr: Array = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
     
     open var signDateArr: [String]?
     open var selectColor: UIColor?

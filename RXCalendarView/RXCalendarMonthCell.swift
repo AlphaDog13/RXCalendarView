@@ -19,7 +19,12 @@ class RXCalendarMonthCell: UICollectionViewCell {
             monthDrawView.itemArr = Date.monthDays(date: date ?? Date())
             
             let dateArr = monthStr!.components(separatedBy: "-")
-            let tempMonthStr = dateArr[1].replacingOccurrences(of: "0", with: "")
+            let tempMonthStr: String
+            if dateArr[1].hasPrefix("0") {
+                tempMonthStr = dateArr[1].replacingOccurrences(of: "0", with: "")
+            } else {
+                tempMonthStr = dateArr[1]
+            }
             titleLabel.text = "\(tempMonthStr)月"
         }
     }
