@@ -99,7 +99,7 @@ open class RXCalendarContainerView: UIView {
     }
     
     @objc open func reloadCalendar() {
-        calendarContainer.midCalendar.reload()
+        calendarContainer.calendarArr[1].reload()
     }
     
 }

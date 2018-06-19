@@ -10,7 +10,7 @@
 
 ## 样例
 
-![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_7fMynP.GIF) ![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_b83B9q.GIF) 
+![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_Vj79bL.GIF) ![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_7fMynP.GIF) ![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_b83B9q.GIF) 
 
 
 ## 需要
@@ -29,7 +29,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-pod 'RXCalendarView', '~> 0.1.0'
+pod 'RXCalendarView', '~> 0.4.0'
 end
 ```
 
@@ -39,6 +39,7 @@ end
 ```swift
 class ViewController: UIViewController, RXCalendarDelegate, RXCalendarDataSource {
 
+//月历
 lazy var calendarView: RXCalendarContainerView = {
     let view: RXCalendarContainerView = RXCalendarContainerView(frame: CGRect.zero, scrollDirection: RXCalendarScrollDirection.scrollVertical)
     view.dataSource = self
@@ -47,13 +48,17 @@ lazy var calendarView: RXCalendarContainerView = {
     return view
 }()
 
-override func viewDidLoad() {
-    super.viewDidLoad()
-    view.addSubview(calendarView)
-}
+//年历
+lazy var yearCalendarView: RXYearScrollView = {
+    let view: RXYearScrollView = RXYearScrollView(frame: CGRect.zero, year: "2020", scrollDirection: RXCalendarScrollDirection.scrollHorizonal)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    view.yearScrollViewDelegate = self
+    return view
+}()
+
 ```
 
-### DataSource
+### RXCalendarDataSource
 
 ```swift
 func signDateInMonth(view: RXCalendarView) -> [String]  //需标记的日期 [yyyy-MM-dd]
@@ -62,11 +67,18 @@ func rxCalendarSignColor() -> UIColor                   //标记颜色
 func rxCalendarNotInMonthColor() -> UIColor             //非当月颜色
 ```
 
-### Delegate
+### RXCalendarDelegate
 
 ```swift
 func calendarAction(_ dayInfo: RXDateObject)            //选中日期信息
 func didScrollToNextMonth(_ monthInfo: RXMonthObject)   //当前月份信息
+```
+
+### RXYearScrollViewDelegate
+
+```swift
+func yearScrollView(currentYear yearStr: String)             //当前显示年份
+func yearScrollViewSelect(didSelectMonth monthStr: String)   //选择月份
 ```
 
 ### 相关类

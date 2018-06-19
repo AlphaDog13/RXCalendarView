@@ -14,6 +14,13 @@ class ViewController: UIViewController {
     var calendarHeightConstraint: NSLayoutConstraint?
     var selectMonth: String?
     
+    lazy var yearLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "2020"
+        return label
+    }()
+    
     lazy var calendarView: RXCalendarContainerView = {
         let view: RXCalendarContainerView = RXCalendarContainerView(frame: CGRect.zero, month: selectMonth!, scrollDirection: RXCalendarScrollDirection.scrollHorizonal)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +47,7 @@ class ViewController: UIViewController {
         //RXCalendarContainerView
         
         //RXYearScrollView
+        view.addSubview(yearLabel)
         view.addSubview(yearCalendarView)
         
         layout()
@@ -51,8 +59,11 @@ class ViewController: UIViewController {
         
         //RXYearScrollView
         if let _ = yearCalendarView.superview {
-            view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(8)-[yearCalendarView]-(8)-|", options: [], metrics: nil, views: ["yearCalendarView" : yearCalendarView]))
-            view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(8)-[yearCalendarView]-(8)-|", options: [], metrics: nil, views: ["yearCalendarView" : yearCalendarView]))
+            view.addConstraint(NSLayoutConstraint(item: yearLabel, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 20))
+            view.addConstraint(NSLayoutConstraint(item: yearLabel, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0))
+            
+            view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(16)-[yearCalendarView]-(16)-|", options: [], metrics: nil, views: ["yearCalendarView" : yearCalendarView]))
+            view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(40)-[yearCalendarView]-(16)-|", options: [], metrics: nil, views: ["yearCalendarView" : yearCalendarView]))
         }
     }
 
@@ -97,6 +108,10 @@ extension ViewController: RXCalendarDelegate, RXCalendarDataSource {
 }
 
 extension ViewController: RXYearScrollViewDelegate {
+    
+    func yearScrollView(currentYear yearStr: String) {
+        yearLabel.text = yearStr
+    }
     
     func yearScrollViewSelect(didSelectMonth monthStr: String) {
         print("\(monthStr)")

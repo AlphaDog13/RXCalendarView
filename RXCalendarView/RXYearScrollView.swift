@@ -11,6 +11,7 @@ import UIKit
 @objc(RXYearScrollViewDelegate)
 public protocol RXYearScrollViewDelegate {
     func yearScrollViewSelect(didSelectMonth monthStr: String)
+    func yearScrollView(currentYear yearStr: String)
 }
 
 public class RXYearScrollView: UIScrollView {
@@ -52,7 +53,7 @@ public class RXYearScrollView: UIScrollView {
     }
     
     //MARK: - Init
-    @objc public convenience init(frame: CGRect, year: String = currentYear(), scrollDirection: RXCalendarScrollDirection) {
+    @objc public convenience init(frame: CGRect, year: String = getCurrentYear(), scrollDirection: RXCalendarScrollDirection) {
         self.init(frame: frame)
         self.currentYear = year
         self.scrollDirection = scrollDirection
@@ -159,7 +160,7 @@ public class RXYearScrollView: UIScrollView {
     
     
     //MARK: - Action
-    static public func currentYear() -> String {
+    static public func getCurrentYear() -> String {
         let dateFormatter: DateFormatter = DateFormatter.init()
         dateFormatter.dateFormat = "yyyy"
         return dateFormatter.string(from: Date())
@@ -220,7 +221,7 @@ extension RXYearScrollView: UIScrollViewDelegate {
     }
     
     fileprivate func moveToYear(calendarView: RXYearCalendarView) {
-        
+        yearScrollViewDelegate?.yearScrollView(currentYear: calendarView.yearStr)
     }
     
 }
