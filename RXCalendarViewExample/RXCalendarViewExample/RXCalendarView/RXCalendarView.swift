@@ -24,15 +24,13 @@ open class RXCalendarView: UICollectionView {
     weak var cellDelegate: RXCalendarCellDelegate?
     weak var cellDataSource: RXCalendarCellDataSource? {
         didSet {
-            resetData()
-            reloadData()
+            reload()
         }
     }
     
     open var itemArr = [RXDateObject]() {
         didSet {
-            resetData()
-            reloadData()
+            reload()
         }
     }
     
@@ -46,7 +44,7 @@ open class RXCalendarView: UICollectionView {
     open var cellHeight: CGFloat?
     
     var dateStr: String = ""
-
+    
     //MARK: - Init
     public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -95,7 +93,9 @@ open class RXCalendarView: UICollectionView {
     //MARK: - Public Action
     @objc open func reload() {
         resetData()
-        reloadData()
+        CATransaction.setDisableActions(true)
+        self.reloadData()
+        CATransaction.commit()
     }
     
 }
