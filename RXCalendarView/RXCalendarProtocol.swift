@@ -11,7 +11,7 @@ import UIKit
 
 @objc(RXCalendarDataSource)
 public protocol RXCalendarDataSource {
-    func signDateInMonth(view: RXCalendarView) -> [String]
+    func signDateInMonth(view: RXCalendarView) -> [Dictionary<String, Any>]
     func rxCalendarSelectColor() -> UIColor
     func rxCalendarSignColor() -> UIColor
     func rxCalendarNotInMonthColor() -> UIColor
@@ -33,7 +33,7 @@ extension RXCalendarDelegate {
 
 extension RXCalendarDataSource {
     
-    func signDateInMonth(view: RXCalendarView) -> [String] {
+    func signDateInMonth(view: RXCalendarView) -> [Dictionary<String, Any>] {
         return []
     }
     

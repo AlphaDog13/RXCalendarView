@@ -20,6 +20,7 @@ open class RXCalendarDayCell: UICollectionViewCell {
             titleLabel.font = dateFont
         }
     }
+    var remarkInfoDic: Dictionary<String, Any>?
     
     var dataObject: RXDateObject = RXDateObject() {
         didSet {
@@ -96,8 +97,8 @@ open class RXCalendarDayCell: UICollectionViewCell {
     
     open func cellSign(isSign: Bool) {
         if isSign {
-            titleLabel.textColor = signColor
-            titleLabel.backgroundColor = .clear
+            titleLabel.textColor = .white
+            titleLabel.backgroundColor = signColor
         }
     }
     

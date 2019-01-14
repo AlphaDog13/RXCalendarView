@@ -13,7 +13,7 @@ protocol RXCalendarCellDelegate: NSObjectProtocol {
 }
 
 protocol RXCalendarCellDataSource: NSObjectProtocol {
-    func signDateInCurrentMonth(view: RXCalendarView) -> [String]
+    func signDateInCurrentMonth(view: RXCalendarView) -> [Dictionary<String, Any>]
     func selectColor(view: RXCalendarView) -> UIColor
     func signColor(view: RXCalendarView) -> UIColor
     func dayNotInMonthColor(view: RXCalendarView) -> UIColor
@@ -24,19 +24,17 @@ open class RXCalendarView: UICollectionView {
     weak var cellDelegate: RXCalendarCellDelegate?
     weak var cellDataSource: RXCalendarCellDataSource? {
         didSet {
-            resetData()
-            reloadData()
+            reload()
         }
     }
     
     open var itemArr = [RXDateObject]() {
         didSet {
-            resetData()
-            reloadData()
+            reload()
         }
     }
     
-    open var signDateArr: [String]?
+    open var signDateArr: [Dictionary<String, Any>]?
     open var selectColor: UIColor?
     open var signColor: UIColor?
     open var dayNotInMonthColor: UIColor?
@@ -95,7 +93,9 @@ open class RXCalendarView: UICollectionView {
     //MARK: - Public Action
     @objc open func reload() {
         resetData()
-        reloadData()
+        CATransaction.setDisableActions(true)
+        self.reloadData()
+        CATransaction.commit()
     }
     
 }
@@ -113,14 +113,18 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
         let cellDate = item.dateStr
         
         cell.selectColor = selectColor
-        cell.signColor = signColor
         cell.notInMonthColor = dayNotInMonthColor
         cell.dateFont = cellDateFont
         
         item.isSign = false
         if let arr = signDateArr, arr.count > 0 {
-            if arr.contains(cellDate) {
-                item.isSign = true
+            for dic in arr {
+                if dic["date"] as! String == cellDate {
+                    item.isSign = true
+                    cell.signColor = hexadecimalColor(hexadecimal: dic["color"] as! String)
+                    cell.remarkInfoDic = dic
+                    break
+                }
             }
         }
         
@@ -128,7 +132,6 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
         if cellDate == RXCalendarSingleton.shared.selectedDateStr {
             item.isSelected = true
         }
-        
         cell.dataObject = item
         
         return cell
@@ -154,4 +157,37 @@ extension RXCalendarView: UICollectionViewDelegate, UICollectionViewDataSource, 
         cellDelegate?.calendarCellAction(cellInfo: item)
     }
     
+    func hexadecimalColor(hexadecimal:String) -> UIColor {
+        var cstr = hexadecimal.trimmingCharacters(in:  CharacterSet.whitespacesAndNewlines).uppercased() as NSString;
+        if(cstr.length < 6){
+            return UIColor.clear;
+        }
+        if(cstr.hasPrefix("0X")){
+            cstr = cstr.substring(from: 2) as NSString
+        }
+        if(cstr.hasPrefix("#")){
+            cstr = cstr.substring(from: 1) as NSString
+        }
+        if(cstr.length != 6){
+            return UIColor.clear;
+        }
+        var range = NSRange.init()
+        range.location = 0
+        range.length = 2
+        //r
+        let rStr = cstr.substring(with: range);
+        //g
+        range.location = 2;
+        let gStr = cstr.substring(with: range)
+        //b
+        range.location = 4;
+        let bStr = cstr.substring(with: range)
+        var r :UInt32 = 0x0;
+        var g :UInt32 = 0x0;
+        var b :UInt32 = 0x0;
+        Scanner.init(string: rStr).scanHexInt32(&r);
+        Scanner.init(string: gStr).scanHexInt32(&g);
+        Scanner.init(string: bStr).scanHexInt32(&b);
+        return UIColor.init(red: CGFloat(r)/255.0, green: CGFloat(g)/255.0, blue: CGFloat(b)/255.0, alpha: 1);
+    }
 }

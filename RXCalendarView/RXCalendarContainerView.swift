@@ -107,7 +107,7 @@ open class RXCalendarContainerView: UIView {
 extension RXCalendarContainerView: RXCalendarCellDelegate, RXCalendarCellDataSource {
     
     //MARK: - RXCalendarCellDataSource
-    func signDateInCurrentMonth(view: RXCalendarView) -> [String] {
+    func signDateInCurrentMonth(view: RXCalendarView) -> [Dictionary<String, Any>] {
         if let arr = dataSource?.signDateInMonth(view: view) {
             return arr
         }

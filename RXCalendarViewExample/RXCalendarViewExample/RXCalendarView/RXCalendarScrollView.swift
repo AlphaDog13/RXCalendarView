@@ -240,6 +240,18 @@ extension RXCalendarScrollView: UIScrollViewDelegate {
         let thisMonthRange: Range = calendar.range(of: .day, in: .month, for: dateFormatter_M.date(from: month)!)!
         let calendarSize: CGSize = CGSize.init(width: calendarView.bounds.size.width, height: calendarView.bounds.size.height + 40)
         let monthObj: RXMonthObject = RXMonthObject(month: month, startDate: "\(month)-01", endDate: "\(month)-\(thisMonthRange.count)", size:calendarSize)
+        
+        if monthObj.monthStr == dateFormatter_M.string(from: NSDate() as Date) {
+            let nowDate = NSDate()
+            let formatter = DateFormatter.init()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let dateString = formatter.string(from: nowDate as Date)
+            RXCalendarSingleton.shared.selectedDateStr = dateString
+        } else {
+            RXCalendarSingleton.shared.selectedDateStr = "\(month)-01"
+        }
+        containerView?.calendarCellAction(cellInfo: RXDateObject(date: RXCalendarSingleton.shared.selectedDateStr!, day: "00"))
+        
         containerView?.scrollToNextMonth(monthInfo: monthObj)
     }
     
